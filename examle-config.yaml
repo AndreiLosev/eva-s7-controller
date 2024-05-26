@@ -61,6 +61,25 @@ config:
         - offset: 38
           oid: sensor:tank1/test2
           type: LReal
+    - area: DB12
+      single_request: false
+      map:
+        - offset: 34
+          oid: unit:tank1/pump1_speed
+          type: Real
+    - area: M
+      single_request: false
+      map:
+        - offset: 38
+          oid: unit:tank1/pump2_speed
+          type: Real
+        - offset: 40/0
+          oid: unit:tank1/pump1_run
+    - area: DB4
+      single_request: false
+      map:
+        - offset: 40/1
+          oid: unit:tank1/pump2_run
   action_map: 
     unit:tank1/pump1_speed: 
       area: DB12

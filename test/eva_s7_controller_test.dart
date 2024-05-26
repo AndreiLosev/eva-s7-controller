@@ -20,7 +20,7 @@ void main() {
     expect(c.connectionType, 3);
     expect(c.pullCache.toString(), Duration(hours: 1).toString());
     expect(c.pullInterval.toString(), Duration(seconds: 1, milliseconds: 500).toString());
-    expect(c.pull.length, 2);
+    expect(c.pull.length, 5);
     expect(c.pull[0].area, S7Area.dataBlock);
     expect(c.pull[0].dbNum, 2);
     expect(c.pull[1].area, S7Area.merkers);
