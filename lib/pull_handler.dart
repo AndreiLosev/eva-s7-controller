@@ -6,6 +6,7 @@ import 'package:eva_s7_controller/config/pull.dart';
 import 'package:eva_s7_controller/config/utils.dart';
 import 'package:eva_s7_controller/utils/bit_map.dart';
 import 'package:eva_s7_controller/utils/periodic_timer.dart';
+import 'package:eva_sdk/eva_sdk.dart';
 
 class PullHandler {
   final AsyncClient _s7client;
@@ -17,12 +18,14 @@ class PullHandler {
   final Duration _pullInterval;
   PeriodicTimer? _timerMulti;
   PeriodicTimer? _timerSingle;
+  final String _svcId;
 
-  PullHandler(this._s7client, Config config)
+  PullHandler(this._s7client, Config config, String id)
       : _multi = config.pull,
         _single = config.singlePull,
         _pullCache = config.pullCache,
-        _pullInterval = config.pullInterval {
+        _pullInterval = config.pullInterval,
+        _svcId = id {
     _setMultiREquest();
   }
 
@@ -30,13 +33,17 @@ class PullHandler {
     if (_multi.isNotEmpty) {
       _timerMulti = PeriodicTimer(_pullInterval, (_) async {
         await _readMulti();
-      });
+      },
+          executeIfDelay: () =>
+              svc().logger.warn("$_svcId pull more than _pullInterval"));
     }
 
     if (_single.isNotEmpty) {
       _timerSingle = PeriodicTimer(_pullInterval, (_) async {
         await _readSingle();
-      });
+      },
+          executeIfDelay: () =>
+              svc().logger.warn("$_svcId pull more than _pullInterval"));
     }
   }
 

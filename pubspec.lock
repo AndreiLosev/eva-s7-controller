@@ -98,10 +98,10 @@ packages:
     dependency: "direct main"
     description:
       name: eva_sdk
-      sha256: "3858231489912540e790a3346d276d04500973fe7813d69188d811b28b92d0da"
+      sha256: "90cf83107fbc46b48cc5b11b57e8282b002c4ab80a6da0cbe8291cf653c02a70"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.9"
+    version: "0.2.1"
   ffi:
     dependency: transitive
     description:

@@ -9,7 +9,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   dart_snap7: ^0.5.1
-  eva_sdk: ^0.1.3
+  eva_sdk: ^0.2.1
   path: ^1.8.0
 
 dev_dependencies:

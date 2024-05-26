@@ -15,8 +15,9 @@ const author = "Losev Andrei";
 const version = "0.1.0";
 const description = "S7 legacy client";
 
+int exitCode = 1;
+
 void main(List<String> arguments) async {
-  int exitCode = 1;
   final s7client = AsyncClient();
   late final Map<String, ActionItem> actionMap;
 
@@ -56,7 +57,7 @@ void main(List<String> arguments) async {
     exitCode = 0;
   } finally {
     await s7client.destroy();
+    exit(exitCode);
   }
 
-  exit(exitCode);
 }
