@@ -49,7 +49,7 @@ class PullItem {
   final (int, int?) offset;
   final Oid oid;
   late final S7Type type;
-  List<Function>? transform;
+  final List<Function> _transform = [];
   double? delta;
   dynamic _oldValue;
   final _timer = Stopwatch();
@@ -59,9 +59,8 @@ class PullItem {
         oid = Oid(config['oid']) {
     type = S7Type.fromString(config['type'], offset);
     if (config['transform'] != null) {
-      transform = [];
       for (var item in config['transform']) {
-        transform!.add(_transforCallbeck(item));
+        _transform.add(_transforCallbeck(item));
       }
     }
 
@@ -82,6 +81,11 @@ class PullItem {
 
   Future<void> publish(dynamic value) async {
     _oldValue = value;
+    
+    for (var fn in _transform) {
+      value = fn(value);
+    }
+
     await svc().rpc.bus.publish(
           EapiTopic.rawStateTopic.resolve(oid.asPath()),
           serialize({'value': value, 'status': 1}),

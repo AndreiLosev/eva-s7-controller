@@ -8,7 +8,7 @@ user: nobody
 workers: 1
 config: 
   ip: 127.0.0.1
-  port: 102 # defautl port 102
+  port: 102 # defautl S7 port 102
   rack: 0 # S300 - 0, S400 - hardware configuration, S1200 - 0 or 1, s1500 - 0 or 1
   slot: 0 # S300 - 2, S400 - hardware configuration, S1200 - o or 1, s1500 - 0 or 1
   connection_type: 3 # 1 - as PG, 2 - as OP, 3..127 - S7 Basic
@@ -77,4 +77,3 @@ config:
     unit:tank1/pump2_run: 
       area: DB4
       offset: 40/1
-      type: Bool
