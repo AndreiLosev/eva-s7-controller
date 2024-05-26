@@ -19,7 +19,7 @@ class SvcAction {
     svc().needReady();
     final uAction = Action(params);
 
-    await svc().controller.eventRunning(uAction);
+    await svc().controller.eventPending(uAction);
     final item = _getAction(uAction.oid.asString());
 
     if (item == null) {
@@ -30,12 +30,13 @@ class SvcAction {
       return null;
     }
 
+
     final run = switch (item.type) {
       S7Type.bool => _writeBit(item, uAction),
       _ => _writeBytes(item, uAction),
     };
 
-    await svc().controller.eventPending(uAction);
+    await svc().controller.eventRunning(uAction);
 
     try {
       await run;
@@ -43,7 +44,7 @@ class SvcAction {
       await anyError(uAction, e);
       return null;
     }
-    await svc().controller.eventCompleted(uAction, 'all fine');
+    await svc().controller.eventCompleted(uAction, uAction.oid.asString());
 
     await svc().rpc.bus.publish(
           EapiTopic.rawStateTopic.resolve(uAction.oid.asPath()),
