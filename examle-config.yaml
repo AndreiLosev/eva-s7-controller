@@ -1,0 +1,85 @@
+bus: 
+  path: var/bus.ipc
+command: /opt/sofkip/svc/eva-s7-controller
+react_to_fail: true
+timeout: 
+  startup: 6.0
+user: nobody
+workers: 1
+config: 
+  ip: 127.0.0.1
+  port: 102 # defautl port 102
+  rack: 0 # S300 - 0, S400 - hardware configuration, S1200 - 0 or 1, s1500 - 0 or 1
+  slot: 0 # S300 - 2, S400 - hardware configuration, S1200 - o or 1, s1500 - 0 or 1
+  connection_type: 3 # 1 - as PG, 2 - as OP, 3..127 - S7 Basic
+  pull_cache_sec: 3600
+  pull_interval: 1.5
+  pull: 
+    - area: DB2 # DB<№> - data block, M - merkers, I - inputs, Q - outputs
+      single_request: false
+      map: 
+        - offset: 22/0
+          oid: sensor:tank1/level_min
+          type: Bool
+        - offset: 22/1
+          oid: sensor:tank1/level_mid
+          type: Bool
+        - offset: 22/2
+          oid: sensor:tank1/level_max
+          type: Bool
+        - offset: 22/3
+          oid: sensor:tank1/hatch
+          type: Bool
+          transform: 
+            - func: invert # invert, add, subtract, multiply, divide,  
+              params: []
+        - offset: 24
+          oid: sensor:tank1/counter_out
+          type: int
+          transform: 
+            - func: multiply
+              params: 
+                - 5
+        - offset: 26
+          oid: sensor:tank1/counter_in
+          type: Dint
+        - offset: 30
+          oid: sensor:tank1/temp_in
+          type: Real
+          value_delta: 0.15 # report event only if the new value difference is >= (default 0.1)
+          transform: 
+            - func: divide
+              params: 
+                - 2
+            - func: add
+              params: 
+                - 48
+        - offset: 34
+          oid: sensor:tank1/temp_out
+          type: LReal
+    - area: M
+      single_request: false
+      map: 
+        - offset: 34
+          oid: sensor:tank1/test1
+          type: Real
+        - offset: 38
+          oid: sensor:tank1/test2
+          type: LReal
+  action_map: 
+    unit:tank1/pump1_speed: 
+      area: DB12
+      offset: 34
+      type: Real
+    unit:tank1/pump2_speed: 
+      area: M
+      offset: 38
+      type: Real
+    unit:tank1/pump1_run: 
+      area: M
+      offset: 40/0
+      type: Bool
+    unit:tank1/pump2_run: 
+      area: DB4
+      offset: 40/1
+      type: Bool
