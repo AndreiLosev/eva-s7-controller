@@ -55,7 +55,7 @@ class TagGet {
     try {
       final (area, dbNum) = parsArea(params['area']);
       final (byte, bit) = parseOffset(params['offset']);
-      final type = S7Type.fromString(params['type']);
+      final type = S7Type.fromString(params['type'], (byte, bit));
 
       if (type == S7Type.bool && bit == null) {
         throw EvaError(EvaErrorKind.invalidParams, "unspecified bit: $bit");

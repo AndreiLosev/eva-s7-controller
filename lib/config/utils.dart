@@ -35,7 +35,15 @@ enum S7Type {
   real,
   lreal;
 
-  static S7Type fromString(String type) {
+  static S7Type fromString(String? type, (I64, I64?) offset) {
+    if (offset.$2 != null) {
+      return bool;
+    }
+
+    if (type == null) {
+      return int;
+    }
+
     type = type.trim().toLowerCase();
     return switch (type) {
       'bool' => bool,

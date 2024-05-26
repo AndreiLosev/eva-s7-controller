@@ -48,7 +48,7 @@ class Pull {
 class PullItem {
   final (int, int?) offset;
   final Oid oid;
-  final S7Type type;
+  late final S7Type type;
   List<Function>? transform;
   double? delta;
   dynamic _oldValue;
@@ -56,8 +56,8 @@ class PullItem {
 
   PullItem(Map<dynamic, dynamic> config)
       : offset = parseOffset(config),
-        oid = Oid(config['oid']),
-        type = S7Type.fromString(config['type']) {
+        oid = Oid(config['oid']) {
+    type = S7Type.fromString(config['type'], offset);
     if (config['transform'] != null) {
       transform = [];
       for (var item in config['transform']) {

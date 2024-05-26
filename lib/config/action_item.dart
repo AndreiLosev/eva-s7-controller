@@ -11,6 +11,6 @@ class ActionItem {
     area = areaAndDbNum.$1;
     dbNum = areaAndDbNum.$2;
     offset = parseOffset(config);
-    type = S7Type.fromString(config['type']);
+    type = S7Type.fromString(config['type'], offset);
   }
 }

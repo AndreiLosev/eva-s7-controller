@@ -20,12 +20,12 @@ class PullHandler {
   PeriodicTimer? _timerSingle;
   final String _svcId;
 
-  PullHandler(this._s7client, Config config, String id)
+  PullHandler(this._s7client, Config config)
       : _multi = config.pull,
         _single = config.singlePull,
         _pullCache = config.pullCache,
         _pullInterval = config.pullInterval,
-        _svcId = id {
+        _svcId = svc().config.id {
     _setMultiREquest();
   }
 

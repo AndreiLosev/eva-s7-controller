@@ -66,7 +66,7 @@ class TagSet {
     try {
       final (area, dbNum) = parsArea(params['area']);
       final (byte, bit) = parseOffset(params['offset']);
-      final type = S7Type.fromString(params['type']);
+      final type = S7Type.fromString(params['type'], (byte, bit));
       final value = params['value'];
 
       if (type == S7Type.bool && (bit == null || value is! bool)) {

@@ -20,22 +20,17 @@ config:
       map: 
         - offset: 22/0
           oid: sensor:tank1/level_min
-          type: Bool
         - offset: 22/1
           oid: sensor:tank1/level_mid
-          type: Bool
         - offset: 22/2
           oid: sensor:tank1/level_max
-          type: Bool
         - offset: 22/3
           oid: sensor:tank1/hatch
-          type: Bool
           transform: 
             - func: invert # invert, add, subtract, multiply, divide,  
               params: []
         - offset: 24
           oid: sensor:tank1/counter_out
-          type: int
           transform: 
             - func: multiply
               params: 
