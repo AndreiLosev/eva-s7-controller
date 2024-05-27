@@ -16,40 +16,40 @@ class SvcAction {
   SvcAction(this._client, this._getAction);
 
   Future<Null> call(Map<String, dynamic> params) async {
-    svc().needReady();
-    final uAction = Action(params);
-
-    await svc().controller.eventPending(uAction);
-    final item = _getAction(uAction.oid.asString());
-
-    if (item == null) {
-      await nullError(uAction);
-      return;
-    } else if (item.type == S7Type.bool && uAction.params!.value is! bool) {
-      await boolError(uAction);
-      return null;
-    }
-
-
-    final run = switch (item.type) {
-      S7Type.bool => _writeBit(item, uAction),
-      _ => _writeBytes(item, uAction),
-    };
-
-    await svc().controller.eventRunning(uAction);
-
     try {
-      await run;
-    } catch (e) {
-      await anyError(uAction, e);
-      return null;
-    }
-    await svc().controller.eventCompleted(uAction, uAction.oid.asString());
+      svc().needReady();
+      final uAction = Action(params);
 
-    await svc().rpc.bus.publish(
-          EapiTopic.rawStateTopic.resolve(uAction.oid.asPath()),
-          serialize({'status': 1, 'value': uAction.params!.value}),
-        );
+      await svc().controller.eventPending(uAction);
+      final item = _getAction(uAction.oid.asString());
+
+      if (item == null) {
+        await nullError(uAction);
+        return;
+      }
+
+      final run = switch (item.type) {
+        S7Type.bool => _writeBit(item, uAction),
+        _ => _writeBytes(item, uAction),
+      };
+
+      await svc().controller.eventRunning(uAction);
+
+      try {
+        await run;
+      } catch (e) {
+        await anyError(uAction, e);
+        return null;
+      }
+      await svc().controller.eventCompleted(uAction, uAction.oid.asString());
+
+      await svc().rpc.bus.publish(
+            EapiTopic.rawStateTopic.resolve(uAction.oid.asPath()),
+            serialize({'status': 1, 'value': uAction.params!.value}),
+          );
+    } catch (e, s) {
+      svc().logger.error({'e': e, 's': s});
+    }
 
     return null;
   }
@@ -85,19 +85,18 @@ class SvcAction {
 
   Uint8List _value(ActionItem item, Action uAction) {
     return Uint8List.view(item.type
-        .setValue(ByteData(item.type.dataLen()), item.offset.$1,
-            uAction.params!.value)
+        .setValue(ByteData(item.type.dataLen()), 0, uAction.params!.value)
         .buffer);
   }
 
   Future<void> _writeBit(ActionItem item, Action uAction) =>
       switch (item.area) {
         S7Area.dataBlock => _client.writeDataBlockBit(item.dbNum,
-            item.offset.$1, item.offset.$2!, uAction.params!.value as bool),
+            item.offset.$1, item.offset.$2!, uAction.params!.value == 1),
         S7Area.merkers => _client.writeMerkersBit(
-            item.offset.$1, item.offset.$2!, uAction.params!.value as bool),
+            item.offset.$1, item.offset.$2!, uAction.params!.value == 1),
         S7Area.outputs => _client.writeOutputsBit(
-            item.offset.$1, item.offset.$2!, uAction.params!.value as bool),
+            item.offset.$1, item.offset.$2!, uAction.params!.value == 1),
         _ => throw EvaError(
             EvaErrorKind.invalidParams, "set inputs bit not implemented"),
       };

@@ -129,10 +129,10 @@ enum S7Type {
         data.setUint32(start, value);
         return data;
       case S7Type.real:
-        data.setFloat32(start, value);
+        data.setFloat32(start, value / 1);
         return data;
       case S7Type.lreal:
-        data.setFloat64(start, value);
+        data.setFloat64(start, value / 1);
         return data;
     }
   }
