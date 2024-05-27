@@ -29,7 +29,11 @@ void main(List<String> arguments) async {
       ..addMethod(Terminate.createMethod())
       ..addMethod(Kill.createMethod());
 
-    await svc().load();
+    if (arguments.contains('--local')) {
+      await svc().debugLoad('/home/andrei/documents/my/eva-s7-controller/bin/config.yaml', 'softkip.s7controller.s1');
+    } else {
+      await svc().load();
+    }
     await svc().init(info);
 
     final config = Config(svc().config.config);
@@ -55,6 +59,8 @@ void main(List<String> arguments) async {
     pullHandler.stop();
     await s7client.disconnect();
     exitCode = 0;
+  } catch(e, s) {
+      print({"err": e, "trace": s});
   } finally {
     await s7client.destroy();
     exit(exitCode);
