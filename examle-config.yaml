@@ -27,7 +27,7 @@ config:
         - offset: 22/3
           oid: sensor:tank1/hatch
           transform: 
-            - func: invert # invert, add, subtract, multiply, divide,  
+            - func: invert # invert, add, subtract, multiply, divide, round 
               params: []
         - offset: 24
           oid: sensor:tank1/counter_out

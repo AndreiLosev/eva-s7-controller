@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:eva_s7_controller/config/utils.dart';
 import 'package:eva_sdk/eva_sdk.dart';
@@ -137,6 +138,9 @@ Function _transforCallbeck(Map<dynamic, dynamic> transform) {
         throw Exception("invalid transform params $transform");
       }
       return (num v) => v / params[0];
+    case 'round':
+      final mod = pow(10, params[0]);
+      return (double v) => (v * mod).round() / mod;
     default:
       throw Exception("invalid transform func $transform");
   }
