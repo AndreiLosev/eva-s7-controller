@@ -10,7 +10,6 @@ import 'package:eva_s7_controller/eapi/tag_set.dart';
 import 'package:eva_s7_controller/eapi/terminate.dart';
 import 'package:eva_s7_controller/pull_handler.dart';
 import 'package:eva_sdk/eva_sdk.dart';
-import 'package:eva_sdk/src/debug_log.dart';
 
 const author = "Losev Andrei";
 const version = "0.1.0";
@@ -31,8 +30,10 @@ void main(List<String> arguments) async {
       ..addMethod(Kill.createMethod());
 
     if (arguments.contains('--local')) {
-      dbgInit('console');
-      await svc().debugLoad('/home/andrei/documents/my/eva-s7-controller/bin/config.yaml', 'softkip.s7controller.s1');
+      await svc().debugLoad(
+        '/home/andrei/documents/my/eva-s7-controller/bin/config.yaml',
+        'softkip.s7controller.s1',
+      );
     } else {
       await svc().load();
     }
@@ -61,11 +62,10 @@ void main(List<String> arguments) async {
     pullHandler.stop();
     await s7client.disconnect();
     exitCode = 0;
-  } catch(e, s) {
-      print({"err": e, "trace": s});
+  } catch (e, s) {
+    print({"err": e, "trace": s});
   } finally {
     await s7client.destroy();
     exit(exitCode);
   }
-
 }
