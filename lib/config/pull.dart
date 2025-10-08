@@ -82,7 +82,7 @@ class PullItem {
 
   Future<void> publish(dynamic value) async {
     _oldValue = value;
-    
+
     for (var fn in _transform) {
       value = fn(value);
     }
@@ -118,11 +118,6 @@ Function _transforCallbeck(Map<dynamic, dynamic> transform) {
   switch (func) {
     case 'invert':
       return (bool v) => !v;
-    case 'add':
-      if (params[0] is! num) {
-        throw Exception("invalid transform params $transform");
-      }
-      return (num v) => v + params[0];
     case 'subtract':
       if (params[0] is! num) {
         throw Exception("invalid transform params $transform");
@@ -141,6 +136,8 @@ Function _transforCallbeck(Map<dynamic, dynamic> transform) {
     case 'round':
       final mod = pow(10, params[0]);
       return (double v) => (v * mod).round() / mod;
+    case 'calc_speed':
+      return (num v) => v;
     default:
       throw Exception("invalid transform func $transform");
   }
