@@ -45,7 +45,11 @@ void main(List<String> arguments) async {
     PullHandler? pullHandler;
 
     try {
-      await s7client.init();
+      if (await File('').exists()) {}
+      final path = await File('/opt/eva4/lib/libsnap7.so').exists()
+          ? '/opt/eva4/lib/libsnap7.so'
+          : null;
+      await s7client.init(path);
       await s7client.setConnectionType(config.connectionType);
       await s7client.connect(config.ip, config.rack, config.slot, config.port);
 
