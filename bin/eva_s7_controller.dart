@@ -45,7 +45,6 @@ void main(List<String> arguments) async {
     PullHandler? pullHandler;
 
     try {
-      if (await File('').exists()) {}
       final path = await File('/opt/eva4/lib/libsnap7.so').exists()
           ? '/opt/eva4/lib/libsnap7.so'
           : null;
